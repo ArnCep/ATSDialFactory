@@ -30,7 +30,7 @@ Additional Actions MCU-based IDO smartwatch models (Such as the IDSport03) may b
 
 The `preview.png` image generation is still being improved, so expect issues:
 
-* Exported preview image may not perfectly match the editor preview, including possible differences in scaling, alignment, sharpness, or rounded display masking.
+* Preview image may not appear in the downloaded .zip file
 
 ## About
 
