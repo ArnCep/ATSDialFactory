@@ -30,7 +30,7 @@ export async function exportProjectZip(
   zip.file("iwf.json", prettyJson(root));
 
   if (fontItems.length > 0) {
-    zip.file("font.json", JSON.stringify({ font: fontItems }, null, 4));
+    zip.file("font.json", JSON.stringify({ item: fontItems }));
   }
 
   if (root.bkground) {
