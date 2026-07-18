@@ -37,8 +37,8 @@ export async function renderPreviewPng(
   const sceneCtx = sceneCanvas.getContext("2d")!;
   renderScene(sceneCtx, state, imageCache, { showHighlight: false });
 
-  const scaledW = Math.round(CANVAS_W * SCALE);
-  const scaledH = Math.round(CANVAS_H * SCALE);
+const scaledW = Math.round(OUT_W * SCALE);
+const scaledH = Math.round(OUT_H * SCALE);
 
   const out = document.createElement("canvas");
   out.width = OUT_W;
