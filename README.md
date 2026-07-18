@@ -1,6 +1,6 @@
 # ATSDialFactory
 
-<img width="2559" height="1304" alt="Screenshot 2026-07-17 222315" src="https://github.com/user-attachments/assets/bb0739d3-4919-4820-b4fb-9a6c9546cbb8" />
+<img width="1919" height="920" alt="Screenshot from 2026-07-18 07-35-50" src="https://github.com/user-attachments/assets/68d45e1c-6b14-48c8-9ee6-2b07903b06fa" />
 
 A browser-based watch face editor written in TypeScript for IDO smartwatches powered by Actions MCU platforms.
 
