@@ -33,6 +33,16 @@ The `preview.png` image generation is still being improved, so expect issues:
 
 * Preview image may not appear in the downloaded .zip file
 
+## Packing Watch Faces
+ATSDialFactory does not support compiling watch faces into a binary format (.iwf). To pack a watch face into an .iwf file, you must install these files/packages first:
+
+* Python 3.11 or higher (With "Add to PATH" enabled)
+* Pillow (pip install pillow)
+
+Usage: `python iwf_packer.py INPUT_FOLDER OUTPUT_FILE`
+
+<img width="1357" height="1204" alt="Untitled - July 20, 2026 at 17 30 03" src="https://github.com/user-attachments/assets/2b3b544f-239e-49ea-8bd2-b181912f8b56" />
+
 ## About
 
 ATSDialFactory is designed to provide a modern, browser-based workflow for creating watch faces for IDO smartwatches using web technologies without complex installations of Python, C++, or other coding languages.
