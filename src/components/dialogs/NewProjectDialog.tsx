@@ -1,13 +1,15 @@
 import { useState } from "react";
 import Modal from "./Modal";
+import { DeviceId, DEVICE_IDS, DEVICE_PROFILES, DEFAULT_DEVICE } from "../../iwf/types";
 
 interface Props {
-  onCreate: (name: string) => void;
+  onCreate: (name: string, deviceId: DeviceId) => void;
   onCancel: () => void;
 }
 
 export default function NewProjectDialog({ onCreate, onCancel }: Props) {
   const [name, setName] = useState("");
+  const [deviceId, setDeviceId] = useState<DeviceId>(DEFAULT_DEVICE);
 
   const submit = () => {
     const trimmed = name.trim();
@@ -15,7 +17,7 @@ export default function NewProjectDialog({ onCreate, onCancel }: Props) {
       alert("Project name cannot be empty.");
       return;
     }
-    onCreate(trimmed);
+    onCreate(trimmed, deviceId);
   };
 
   return (
@@ -27,6 +29,14 @@ export default function NewProjectDialog({ onCreate, onCancel }: Props) {
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") submit(); }}
         />
+      </div>
+      <div className="form-row">
+        <label>Device:</label>
+        <select value={deviceId} onChange={(e) => setDeviceId(e.target.value as DeviceId)}>
+          {DEVICE_IDS.map((id) => (
+            <option key={id} value={id}>{DEVICE_PROFILES[id].label}</option>
+          ))}
+        </select>
       </div>
       <div className="actions">
         <button className="primary" onClick={submit}>Create</button>

@@ -149,5 +149,106 @@ export const DEFAULT_PREVIEW_VALUES: Record<string, string> = {
   anima: "",
 };
 
-export const CANVAS_W = 320;
-export const CANVAS_H = 385;
+// ---------------------------------------------------------------------
+// Device profiles
+// ---------------------------------------------------------------------
+
+export type DeviceId = "IDW13" | "IDW20";
+
+export interface DeviceProfile {
+  id: DeviceId;
+  label: string;
+  /** Internal watch-face canvas size (not scaled — matches the device's real pixel size). */
+  canvasW: number;
+  canvasH: number;
+  /** Default clock-hand anchor point (the pivot's target position, dial center). */
+  anchorX: number;
+  anchorY: number;
+  /** Saved preview.png output size. */
+  previewW: number;
+  previewH: number;
+  /** Corner radius used when drawing the rounded preview border. */
+  previewCornerRadius: number;
+  /** Canvas strokeStyle for the preview's rounded border. */
+  previewBorderColor: string;
+  /** Stroke width (px) for the preview's rounded border. */
+  previewBorderWidth: number;
+}
+
+/**
+ * IDW13's radius/border was derived from the reference border image
+ * supplied for this device (174x196): fitting a circle to the corner
+ * pixels gives center/radius ≈ (32.7, 30.4, 31.3), i.e. offset ≈ 2px
+ * and corner radius ≈ 31px.
+ *
+ * Its border is also visibly lighter/thinner than IDW20's: peak pixel
+ * brightness in the reference is ~50/255, not the ~128/255 a solid
+ * rgb(128,128,128) stroke would give — that works out to rgb(128,128,128)
+ * at ~40% opacity (128 * 0.4 ≈ 51), over a narrower ~2px line (vs
+ * IDW20's 3px). Using IDW20's solid, wider stroke on IDW13's smaller
+ * 174x196 preview reads as too bold/thick, which is what made an
+ * earlier preview.png look "off" next to this reference.
+ *
+ * IDW20's values were already defined (272x324 preview, corner radius
+ * 67, solid rgb(128,128,128) stroke, width 3).
+ */
+export interface DeviceProfile {
+  id: DeviceId;
+  label: string;
+  canvasW: number;
+  canvasH: number;
+  anchorX: number;
+  anchorY: number;
+  previewW: number;
+  previewH: number;
+  previewCornerRadius: number;
+  previewBorderColor: string;
+  previewBorderWidth: number;        // Stroke thickness (keep as is)
+  previewBorderRectWidth?: number;   // Width of the border rectangle (NEW)
+  previewBorderRectHeight?: number;  // Height of the border rectangle (NEW)
+  previewScale: number;
+}
+
+export const DEVICE_PROFILES: Record<DeviceId, DeviceProfile> = {
+  IDW13: {
+    id: "IDW13",
+    label: "IDW13 (240x284)",
+    canvasW: 240,
+    canvasH: 284,
+    anchorX: 120,
+    anchorY: 142,
+    previewW: 174,
+    previewH: 196,
+    previewCornerRadius: 31,
+    previewBorderColor: "rgba(37, 37, 37)",
+    previewBorderWidth: 2,
+    previewBorderRectWidth: 168,   // Custom border width (NEW)
+    previewBorderRectHeight: 194,  // Custom border height (NEW)
+    previewScale: 1,
+  },
+  IDW20: {
+    id: "IDW20",
+    label: "IDW20 (320x385)",
+    canvasW: 320,
+    canvasH: 385,
+    anchorX: 160,
+    anchorY: 193,
+    previewW: 272,
+    previewH: 324,
+    previewCornerRadius: 67,
+    previewBorderColor: "rgb(128, 128, 128)",
+    previewBorderWidth: 3,
+    previewBorderRectWidth: 268,   // Custom border width (NEW)
+    previewBorderRectHeight: 320,  // Custom border height (NEW)
+    previewScale: 0.95,
+  },
+};
+
+export const DEVICE_IDS: DeviceId[] = ["IDW13", "IDW20"];
+export const DEFAULT_DEVICE: DeviceId = "IDW20";
+
+/** Resolves a (possibly unrecognized/legacy) deviceId string to a known profile, defaulting to IDW20. */
+export function getDeviceProfile(deviceId: string | undefined): DeviceProfile {
+  if (deviceId === "IDW13" || deviceId === "IDW20") return DEVICE_PROFILES[deviceId];
+  return DEVICE_PROFILES[DEFAULT_DEVICE];
+}

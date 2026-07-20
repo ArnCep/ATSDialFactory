@@ -1,6 +1,7 @@
-import { ProjectState, derivePreviewValues, createEmptyProject } from "./Scene";
+import { ProjectState, derivePreviewValues, createEmptyProject, deviceProfileOf } from "./Scene";
 import {
   WidgetEntry, WidgetJson, FontJsonItem, PreviewTime, COMING_SOON,
+  DeviceId, DEFAULT_DEVICE,
 } from "../iwf/types";
 import { loadImageFromBlob, baseName, fileExt, isImageFile } from "../utils/image";
 import { buildRootJson, prettyJson, tryParseRoot } from "../iwf/IWFParser";
@@ -29,7 +30,12 @@ async function putImageFile(
 // ---------------------------------------------------------------------
 
 /** Port of on_new_project(). */
-export function newProject(state: ProjectState, notify: () => void, name: string) {
+export function newProject(
+  state: ProjectState,
+  notify: () => void,
+  name: string,
+  deviceId: DeviceId = DEFAULT_DEVICE,
+) {
   Object.assign(state, createEmptyProject());
   state.projectOpen = true;
   state.projectName = name;
@@ -39,8 +45,8 @@ export function newProject(state: ProjectState, notify: () => void, name: string
     preview: "preview.png",
     name,
     author: "admin",
-    description: "IDW20",
-    deviceId: "IDW20",
+    description: deviceId,
+    deviceId,
     bluetooth: false,
     disturb: false,
     battery: false,
@@ -48,6 +54,25 @@ export function newProject(state: ProjectState, notify: () => void, name: string
     item: [],
     bkground: "",
   };
+  notify();
+}
+
+/**
+ * Switches the current project's device profile (IDW13/IDW20). Existing
+ * widget x/y/w/h values are left as-is (not rescaled) — this mirrors
+ * simply changing the `deviceId` metadata field, which is what drives
+ * canvas size, default hand anchor, and preview export dimensions.
+ *
+ * `description` is kept in sync with `deviceId` too (matching how new
+ * projects are created), unless the user has already customized it to
+ * something other than the previous device's id — in that case their
+ * text is left alone.
+ */
+export function setDevice(state: ProjectState, notify: () => void, deviceId: DeviceId) {
+  if (state.root.description === state.root.deviceId) {
+    state.root.description = deviceId;
+  }
+  state.root.deviceId = deviceId;
   notify();
 }
 
@@ -218,10 +243,11 @@ export async function addWatchWidget(
   if (hands.minute.file) await putImageFile(state, imageCache, minFile, hands.minute.file);
   if (hands.second.file) await putImageFile(state, imageCache, secFile, hands.second.file);
 
+  const profile = deviceProfileOf(state);
   const json: WidgetJson = {
     widget: "watch",
     type: "time",
-    x: 0, y: 0, w: 320, h: 385,
+    x: 0, y: 0, w: profile.canvasW, h: profile.canvasH,
     fgcolor: "0xFFFFFFFF",
     second: secFile,
     seccenterx: hands.second.centerX, seccentery: hands.second.centerY,
@@ -297,7 +323,8 @@ export function addGenericWidget(
   widgetKind: string,
   typeVal: string,
 ) {
-  const json: WidgetJson = { widget: widgetKind, type: typeVal, x: 0, y: 0, w: 320, h: 385 };
+  const profile = deviceProfileOf(state);
+  const json: WidgetJson = { widget: widgetKind, type: typeVal, x: 0, y: 0, w: profile.canvasW, h: profile.canvasH };
   const entry: WidgetEntry = { widgetType: widgetKind, typeValue: typeVal, json, imageStrip: {}, fontFolder: "" };
   state.widgetList.push(entry);
   state.currentWidgetIndex = state.widgetList.length - 1;
@@ -381,7 +408,8 @@ export async function uploadBackground(
 
   const img = await loadImageFromBlob(file).catch(() => null);
   if (!img) return "Failed to load the image file.";
-  if (img.width > 320 || img.height > 385) return "Image Too Large: Bad File";
+  const profile = deviceProfileOf(state);
+  if (img.width > profile.canvasW || img.height > profile.canvasH) return "Image Too Large: Bad File";
 
   const destName = `files${fileCounter.current}.${suffix}`;
   fileCounter.current += 1;

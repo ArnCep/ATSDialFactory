@@ -30,6 +30,7 @@ export async function exportProjectZip(
   zip.file("iwf.json", prettyJson(root));
 
   if (fontItems.length > 0) {
+    // FIXED: Use "item" array instead of "font" to match the original format
     zip.file("font.json", JSON.stringify({ item: fontItems }));
   }
 

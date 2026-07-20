@@ -1,11 +1,5 @@
-import { CANVAS_H, CANVAS_W } from "../iwf/types";
-import { ProjectState } from "./Scene";
+import { ProjectState, deviceProfileOf } from "./Scene";
 import { renderScene } from "./Renderer";
-
-const OUT_W = 272;
-const OUT_H = 324;
-const SCALE = 0.95;
-const CORNER_RADIUS = 67;
 
 function strokeRoundedRect(
   ctx: CanvasRenderingContext2D,
@@ -22,40 +16,67 @@ function strokeRoundedRect(
 }
 
 /**
- * Port of MainWindow.on_save_preview(): renders the 320x385 scene
- * (without the yellow selection box), scales it down 95% onto a
- * 272x324 black canvas, and draws a rounded gray border on top.
- * Returns a PNG Blob ready to save as preview.png.
+ * Port of MainWindow.on_save_preview(), generalized to work for any
+ * device profile: renders the full-size scene (without the yellow
+ * selection box), scales it down to fit within the device's preview
+ * output box with a small margin, and draws a rounded border on top
+ * using that device's own corner radius, stroke color, and stroke
+ * width (see DEVICE_PROFILES — IDW13 and IDW20 do not share the same
+ * border weight/opacity).
+ *
+ *   IDW20: 320x385 canvas -> 272x324 preview, corner radius 67, solid
+ *          rgb(128,128,128) stroke, width 3 (as already defined by
+ *          the original app).
+ *   IDW13: 240x284 canvas -> 174x196 preview, corner radius ~31,
+ *          rgb(128,128,128) at ~40% opacity, width 2 (fitted from the
+ *          supplied reference border image).
  */
 export async function renderPreviewPng(
   state: ProjectState,
   imageCache: Map<string, HTMLImageElement>,
 ): Promise<Blob> {
+  const profile = deviceProfileOf(state);
+  const {
+    canvasW, canvasH, previewW: outW, previewH: outH,
+    previewCornerRadius: cornerRadius, previewBorderColor, previewBorderWidth,
+    previewScale,
+  } = profile;
+
+  // Get custom border dimensions or use defaults
+  const borderRectW = profile.previewBorderRectWidth ?? (outW - 4);
+  const borderRectH = profile.previewBorderRectHeight ?? (outH - 4);
+  
+  // Calculate centering offsets
+  const offsetX = (outW - borderRectW) / 2;
+  const offsetY = (outH - borderRectH) / 2;
+
   const sceneCanvas = document.createElement("canvas");
-  sceneCanvas.width = CANVAS_W;
-  sceneCanvas.height = CANVAS_H;
+  sceneCanvas.width = canvasW;
+  sceneCanvas.height = canvasH;
   const sceneCtx = sceneCanvas.getContext("2d")!;
   renderScene(sceneCtx, state, imageCache, { showHighlight: false });
 
-const scaledW = Math.round(OUT_W * SCALE);
-const scaledH = Math.round(OUT_H * SCALE);
+  const fitScale = Math.min(outW / canvasW, outH / canvasH) * previewScale;
+  const scaledW = Math.round(canvasW * fitScale);
+  const scaledH = Math.round(canvasH * fitScale);
 
   const out = document.createElement("canvas");
-  out.width = OUT_W;
-  out.height = OUT_H;
+  out.width = outW;
+  out.height = outH;
   const ctx = out.getContext("2d")!;
   ctx.fillStyle = "#000000";
-  ctx.fillRect(0, 0, OUT_W, OUT_H);
+  ctx.fillRect(0, 0, outW, outH);
 
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-  const offX = Math.floor((OUT_W - scaledW) / 2);
-  const offY = Math.floor((OUT_H - scaledH) / 2);
-  ctx.drawImage(sceneCanvas, 0, 0, CANVAS_W, CANVAS_H, offX, offY, scaledW, scaledH);
+  const offX = Math.floor((outW - scaledW) / 2);
+  const offY = Math.floor((outH - scaledH) / 2);
+  ctx.drawImage(sceneCanvas, 0, 0, canvasW, canvasH, offX, offY, scaledW, scaledH);
 
-  ctx.strokeStyle = "rgb(128, 128, 128)";
-  ctx.lineWidth = 3;
-  strokeRoundedRect(ctx, 2, 2, OUT_W - 4, OUT_H - 4, CORNER_RADIUS);
+  // Draw border with custom width and height
+  ctx.strokeStyle = previewBorderColor;
+  ctx.lineWidth = previewBorderWidth;
+  strokeRoundedRect(ctx, offsetX, offsetY, borderRectW, borderRectH, cornerRadius);
 
   return new Promise((resolve, reject) => {
     out.toBlob((blob) => {

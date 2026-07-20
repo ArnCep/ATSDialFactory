@@ -1,5 +1,5 @@
-import { CANVAS_H, CANVAS_W, WidgetEntry } from "../iwf/types";
-import { ProjectState, findLastWatchEntry } from "./Scene";
+import { WidgetEntry } from "../iwf/types";
+import { ProjectState, findLastWatchEntry, deviceProfileOf } from "./Scene";
 import { renderCustomWidgetImage } from "./CustomWidgetRenderer";
 import { buildHandSpecs, computeHandAngles, drawHand } from "./HandRenderer";
 
@@ -8,6 +8,10 @@ import { buildHandSpecs, computeHandAngles, drawHand } from "./HandRenderer";
  * result of the original QGraphicsScene: background, then widgets in
  * list order (custom/generic placeholders), then the watch hands on top,
  * then the yellow selection highlight above everything.
+ *
+ * Canvas size is taken from the project's device profile (IDW13 240x284
+ * or IDW20 320x385), not a fixed constant, so the same renderer serves
+ * both devices.
  */
 export function renderScene(
   ctx: CanvasRenderingContext2D,
@@ -15,9 +19,13 @@ export function renderScene(
   imageCache: Map<string, HTMLImageElement>,
   options: { showHighlight?: boolean } = {},
 ) {
-  ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+  const profile = deviceProfileOf(state);
+  const canvasW = profile.canvasW;
+  const canvasH = profile.canvasH;
+
+  ctx.clearRect(0, 0, canvasW, canvasH);
   ctx.fillStyle = "#000000";
-  ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+  ctx.fillRect(0, 0, canvasW, canvasH);
 
   // Background image.
   if (state.root.bkground) {
@@ -60,8 +68,8 @@ export function renderScene(
     if (entry) {
       const x = (entry.json.x as number) ?? 0;
       const y = (entry.json.y as number) ?? 0;
-      const w = (entry.json.w as number) ?? CANVAS_W;
-      const h = (entry.json.h as number) ?? CANVAS_H;
+      const w = (entry.json.w as number) ?? canvasW;
+      const h = (entry.json.h as number) ?? canvasH;
       ctx.save();
       ctx.strokeStyle = "rgb(255, 220, 0)";
       ctx.lineWidth = 2;

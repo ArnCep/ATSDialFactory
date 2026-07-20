@@ -2,25 +2,30 @@ import { useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 
 interface Props {
+  maxW: number;
+  maxH: number;
   onClose: () => void;
 }
 
-const VIEW_W = 340;
-const VIEW_H = 400;
-const MAX_W = 320;
-const MAX_H = 385;
+const MARGIN = 20;
 
 /**
  * Port of BkgroundHelper (bkground_helper.py): a scratch canvas with a
  * rounded green guide border, used to visually check that a background
  * image's corners match the watch face's rounded-corner cutout before
  * committing it as the real background. This tool never writes to the
- * project — it's purely a visual aid, matching the original.
+ * project — it's purely a visual aid, matching the original. Sized to
+ * the current project's device (IDW13 240x284 or IDW20 320x385) rather
+ * than a fixed size, since the two devices have different max
+ * background dimensions.
  */
-export default function BackgroundHelperDialog({ onClose }: Props) {
+export default function BackgroundHelperDialog({ maxW, maxH, onClose }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const viewW = maxW + MARGIN;
+  const viewH = maxH + MARGIN;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,19 +34,19 @@ export default function BackgroundHelperDialog({ onClose }: Props) {
     if (!ctx) return;
 
     ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+    ctx.fillRect(0, 0, viewW, viewH);
 
     if (image) {
-      const x = Math.floor((VIEW_W - MAX_W) / 2);
-      const y = Math.floor((VIEW_H - MAX_H) / 2);
+      const x = Math.floor((viewW - maxW) / 2);
+      const y = Math.floor((viewH - maxH) / 2);
       ctx.save();
       ctx.globalCompositeOperation = "destination-over";
-      ctx.drawImage(image, x, y, MAX_W, MAX_H);
+      ctx.drawImage(image, x, y, maxW, maxH);
       ctx.restore();
     }
 
     const penWidth = 4;
-    const smallerDim = Math.min(VIEW_W, VIEW_H);
+    const smallerDim = Math.min(viewW, viewH);
     const radius = Math.floor((smallerDim * 0.5) / 2);
     const offset = penWidth / 2;
 
@@ -49,9 +54,9 @@ export default function BackgroundHelperDialog({ onClose }: Props) {
     ctx.lineWidth = penWidth;
     ctx.lineJoin = "miter";
     ctx.lineCap = "square";
-    roundedRectPath(ctx, offset, offset, VIEW_W - 2 * offset, VIEW_H - 2 * offset, radius);
+    roundedRectPath(ctx, offset, offset, viewW - 2 * offset, viewH - 2 * offset, radius);
     ctx.stroke();
-  }, [image]);
+  }, [image, viewW, viewH, maxW, maxH]);
 
   const onFile = async (file: File | undefined) => {
     if (!file) return;
@@ -67,7 +72,7 @@ export default function BackgroundHelperDialog({ onClose }: Props) {
       img.src = url;
     }).catch(() => alert("Failed to load the image file."));
 
-    if (img.width > MAX_W || img.height > MAX_H) {
+    if (img.width > maxW || img.height > maxH) {
       alert("Image Too Large: Bad File");
       URL.revokeObjectURL(url);
       return;
@@ -79,8 +84,8 @@ export default function BackgroundHelperDialog({ onClose }: Props) {
     <Modal title="Bkground Corner Matcher" onClose={onClose}>
       <canvas
         ref={canvasRef}
-        width={VIEW_W}
-        height={VIEW_H}
+        width={viewW}
+        height={viewH}
         style={{ background: "#000", boxShadow: "0 0 0 1px var(--border)" }}
       />
       <div className="actions" style={{ justifyContent: "space-between" }}>

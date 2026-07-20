@@ -6,6 +6,8 @@ interface ScrollValue { checked: boolean; value: string }
 interface Props {
   entry: WidgetEntry | null;
   currentIndex: number;
+  canvasW: number;
+  canvasH: number;
   onLivePosition: (x: number, y: number) => void;
   onApply: (xywh: { x: number; y: number; w: number; h: number }, scrollValues: Record<string, ScrollValue>) => void;
   jsonText: string;
@@ -19,25 +21,25 @@ function emptyScrollValues(): Record<string, ScrollValue> {
 }
 
 export default function PropertiesPanel({
-  entry, currentIndex, onLivePosition, onApply, jsonText, fontJsonText,
+  entry, currentIndex, canvasW, canvasH, onLivePosition, onApply, jsonText, fontJsonText,
 }: Props) {
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
-  const [w, setW] = useState(320);
-  const [h, setH] = useState(385);
+  const [w, setW] = useState(canvasW);
+  const [h, setH] = useState(canvasH);
   const [scrollValues, setScrollValues] = useState<Record<string, ScrollValue>>(emptyScrollValues());
 
   // Reload the form whenever the selected widget changes.
   useEffect(() => {
     if (!entry) {
-      setX(0); setY(0); setW(320); setH(385);
+      setX(0); setY(0); setW(canvasW); setH(canvasH);
       setScrollValues(emptyScrollValues());
       return;
     }
     setX((entry.json.x as number) ?? 0);
     setY((entry.json.y as number) ?? 0);
-    setW((entry.json.w as number) ?? 320);
-    setH((entry.json.h as number) ?? 385);
+    setW((entry.json.w as number) ?? canvasW);
+    setH((entry.json.h as number) ?? canvasH);
 
     const sv = emptyScrollValues();
     for (const key of SCROLL_FIELDS) {

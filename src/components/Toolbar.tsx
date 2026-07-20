@@ -1,10 +1,12 @@
 import { ChangeEvent, useRef } from "react";
-import { PreviewTime } from "../iwf/types";
+import { DeviceId, DEVICE_IDS, DEVICE_PROFILES, PreviewTime } from "../iwf/types";
 
 interface Props {
   projectOpen: boolean;
   status: string;
   previewTime: PreviewTime;
+  deviceId: DeviceId;
+  onDeviceChange: (deviceId: DeviceId) => void;
   onNewProject: () => void;
   onOpenProjectFolder: (files: FileList) => void;
   onSaveIwfJson: () => void;
@@ -17,7 +19,7 @@ interface Props {
 }
 
 export default function Toolbar({
-  projectOpen, status, previewTime,
+  projectOpen, status, previewTime, deviceId, onDeviceChange,
   onNewProject, onOpenProjectFolder, onSaveIwfJson, onSaveFontJson,
   onCreateZip, onSavePreview, onUploadBackground, onEditBackground,
   onPreviewTimeChange,
@@ -54,6 +56,19 @@ export default function Toolbar({
           style={{ display: "none" }}
           onChange={handleFolderChange}
         />
+      </div>
+
+      <div className="group">
+        <label>Device</label>
+        <select
+          disabled={!projectOpen}
+          value={deviceId}
+          onChange={(e) => onDeviceChange(e.target.value as DeviceId)}
+        >
+          {DEVICE_IDS.map((id) => (
+            <option key={id} value={id}>{DEVICE_PROFILES[id].label}</option>
+          ))}
+        </select>
       </div>
 
       <div className="group">

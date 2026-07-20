@@ -1,5 +1,6 @@
 import {
   WidgetEntry, RootJson, FontJsonItem, PreviewTime, DEFAULT_PREVIEW_VALUES,
+  DeviceProfile, getDeviceProfile, DEFAULT_DEVICE,
 } from "../iwf/types";
 import { ProjectFiles } from "./ProjectFiles";
 
@@ -17,6 +18,7 @@ export interface ProjectState {
 }
 
 export function createEmptyProject(): ProjectState {
+  const profile = DEVICE_PROFILES_DEFAULT();
   return {
     projectOpen: false,
     projectName: "",
@@ -26,8 +28,8 @@ export function createEmptyProject(): ProjectState {
       preview: "preview.png",
       name: "",
       author: "admin",
-      description: "IDW20",
-      deviceId: "IDW20",
+      description: profile.id,
+      deviceId: profile.id,
       bluetooth: false,
       disturb: false,
       battery: false,
@@ -42,6 +44,15 @@ export function createEmptyProject(): ProjectState {
     previewValues: { ...DEFAULT_PREVIEW_VALUES },
     files: new ProjectFiles(),
   };
+}
+
+function DEVICE_PROFILES_DEFAULT(): DeviceProfile {
+  return getDeviceProfile(DEFAULT_DEVICE);
+}
+
+/** Resolves the current project's device profile (canvas size, hand anchor, preview size/radius). */
+export function deviceProfileOf(state: ProjectState): DeviceProfile {
+  return getDeviceProfile(state.root.deviceId);
 }
 
 /** Port of MainWindow.get_weekday_string() — Monday-first, mirrors QDate.dayOfWeek(). */

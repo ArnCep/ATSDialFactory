@@ -7,10 +7,11 @@ import {
   addGenericWidget, selectWidget, deleteWidget, setWidgetPosition,
   applyWidgetChanges, uploadBackground, setPreviewTime, saveIwfJsonDownload,
   saveFontJsonDownload, createZipDownload, savePreviewDownload, currentRootJson,
-  HandConfigInput,
+  setDevice, HandConfigInput,
 } from "./core/actions";
 import { prettyJson, fontJsonDisplayText } from "./iwf/IWFParser";
 import { INT_KEYS, PreviewTime } from "./iwf/types";
+import { deviceProfileOf } from "./core/Scene";
 
 import Toolbar from "./components/Toolbar";
 import WidgetPanel from "./components/WidgetPanel";
@@ -98,6 +99,8 @@ export default function App() {
         projectOpen={state.projectOpen}
         status={status}
         previewTime={state.previewTime}
+        deviceId={deviceProfileOf(state).id}
+        onDeviceChange={(id) => setDevice(state, notify, id)}
         onNewProject={() => setDialog({ kind: "newProject" })}
         onOpenProjectFolder={handleOpenProjectFolder}
         onSaveIwfJson={() => saveIwfJsonDownload(state)}
@@ -121,12 +124,16 @@ export default function App() {
 
         <div className="canvas-panel">
           <WatchCanvas state={state} imageCache={imageCache} tick={tick} />
-          <div style={{ fontSize: 11, color: "var(--text-1)" }}>320 × 385 · IDW20 canvas</div>
+          <div style={{ fontSize: 11, color: "var(--text-1)" }}>
+            {deviceProfileOf(state).canvasW} × {deviceProfileOf(state).canvasH} · {deviceProfileOf(state).id} canvas
+          </div>
         </div>
 
         <PropertiesPanel
           entry={currentEntry}
           currentIndex={state.currentWidgetIndex}
+          canvasW={deviceProfileOf(state).canvasW}
+          canvasH={deviceProfileOf(state).canvasH}
           onLivePosition={handleLivePosition}
           onApply={handleApply}
           jsonText={jsonText}
@@ -136,9 +143,9 @@ export default function App() {
 
       {dialog.kind === "newProject" && (
         <NewProjectDialog
-          onCreate={(name) => {
-            newProject(state, notify, name);
-            setStatus(`Project "${name}" created.`);
+          onCreate={(name, deviceId) => {
+            newProject(state, notify, name, deviceId);
+            setStatus(`Project "${name}" created (${deviceId}).`);
             setDialog({ kind: "none" });
           }}
           onCancel={() => setDialog({ kind: "none" })}
@@ -147,6 +154,8 @@ export default function App() {
 
       {dialog.kind === "addWatch" && (
         <ClockHandsDialog
+          defaultAnchorX={deviceProfileOf(state).anchorX}
+          defaultAnchorY={deviceProfileOf(state).anchorY}
           onConfirm={handleConfirmWatch}
           onCancel={() => setDialog({ kind: "none" })}
         />
@@ -161,7 +170,11 @@ export default function App() {
       )}
 
       {dialog.kind === "backgroundHelper" && (
-        <BackgroundHelperDialog onClose={() => setDialog({ kind: "none" })} />
+        <BackgroundHelperDialog
+          maxW={deviceProfileOf(state).canvasW}
+          maxH={deviceProfileOf(state).canvasH}
+          onClose={() => setDialog({ kind: "none" })}
+        />
       )}
     </div>
   );

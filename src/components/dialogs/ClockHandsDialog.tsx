@@ -3,12 +3,14 @@ import Modal from "./Modal";
 import { HandConfigInput } from "../../core/actions";
 
 interface Props {
+  defaultAnchorX: number;
+  defaultAnchorY: number;
   onConfirm: (hands: { hour: HandConfigInput; minute: HandConfigInput; second: HandConfigInput }) => void;
   onCancel: () => void;
 }
 
-function defaultHand(): HandConfigInput {
-  return { file: null, fileName: "", centerX: 0, centerY: 0, anchorX: 160, anchorY: 193 };
+function defaultHand(anchorX: number, anchorY: number): HandConfigInput {
+  return { file: null, fileName: "", centerX: 0, centerY: 0, anchorX, anchorY };
 }
 
 function HandFields({
@@ -57,10 +59,10 @@ function HandFields({
   );
 }
 
-export default function ClockHandsDialog({ onConfirm, onCancel }: Props) {
-  const [hour, setHour] = useState(defaultHand());
-  const [minute, setMinute] = useState(defaultHand());
-  const [second, setSecond] = useState(defaultHand());
+export default function ClockHandsDialog({ defaultAnchorX, defaultAnchorY, onConfirm, onCancel }: Props) {
+  const [hour, setHour] = useState(defaultHand(defaultAnchorX, defaultAnchorY));
+  const [minute, setMinute] = useState(defaultHand(defaultAnchorX, defaultAnchorY));
+  const [second, setSecond] = useState(defaultHand(defaultAnchorX, defaultAnchorY));
 
   return (
     <Modal title="Configure watch hands" onClose={onCancel}>
