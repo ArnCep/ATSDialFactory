@@ -22,8 +22,13 @@ ATSDialFactory allows users to create, edit, preview, and export custom watch fa
 
 Currently supported:
 
+### Smartwatches:
 * IDW13
+* IDW18
 * IDW20
+
+### Smartbands:
+* IDB03
 
 Additional Actions MCU-based IDO smartwatch models (e.g. IDSport03) may be supported in future releases.
 
@@ -44,7 +49,8 @@ Usage: `python iwf_packer.py INPUT_FOLDER OUTPUT_FILE`
 <img width="1357" height="1204" alt="Untitled - July 20, 2026 at 17 30 03" src="https://github.com/user-attachments/assets/2b3b544f-239e-49ea-8bd2-b181912f8b56" />
 
 ## Important Notes
-Ring widgets, Progressbar widgets, and some custom widgets are not supported yet. They will be added once reverse-engineered further.
+* Ring widgets, Progressbar widgets, and some custom widgets are not supported yet. They will be added once reverse-engineered further.
+* IDO Smartwatches or Smartbands with Sifli MCUs are NOT compatible with this editor since they use an encrypted format `.watch`.
 
 ## About
 
