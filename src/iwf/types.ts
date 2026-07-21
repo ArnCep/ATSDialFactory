@@ -1,5 +1,5 @@
 /**
- * Type definitions for the IDW20 IWF dial format.
+ * Type definitions for the IDO .iwf dial format.
  *
  * These mirror the in-memory structures used by the original PyQt6
  * application (DialEditorForIDW20.py) as closely as possible:
@@ -153,7 +153,7 @@ export const DEFAULT_PREVIEW_VALUES: Record<string, string> = {
 // Device profiles
 // ---------------------------------------------------------------------
 
-export type DeviceId = "IDW13" | "IDW20";
+export type DeviceId = "IDW13" | "IDW18" | "IDB03" | "IDW20";
 
 export interface DeviceProfile {
   id: DeviceId;
@@ -175,23 +175,6 @@ export interface DeviceProfile {
   previewBorderWidth: number;
 }
 
-/**
- * IDW13's radius/border was derived from the reference border image
- * supplied for this device (174x196): fitting a circle to the corner
- * pixels gives center/radius ≈ (32.7, 30.4, 31.3), i.e. offset ≈ 2px
- * and corner radius ≈ 31px.
- *
- * Its border is also visibly lighter/thinner than IDW20's: peak pixel
- * brightness in the reference is ~50/255, not the ~128/255 a solid
- * rgb(128,128,128) stroke would give — that works out to rgb(128,128,128)
- * at ~40% opacity (128 * 0.4 ≈ 51), over a narrower ~2px line (vs
- * IDW20's 3px). Using IDW20's solid, wider stroke on IDW13's smaller
- * 174x196 preview reads as too bold/thick, which is what made an
- * earlier preview.png look "off" next to this reference.
- *
- * IDW20's values were already defined (272x324 preview, corner radius
- * 67, solid rgb(128,128,128) stroke, width 3).
- */
 export interface DeviceProfile {
   id: DeviceId;
   label: string;
@@ -226,6 +209,38 @@ export const DEVICE_PROFILES: Record<DeviceId, DeviceProfile> = {
     previewBorderRectHeight: 194,  // Custom border height (NEW)
     previewScale: 1,
   },
+  IDW18: {
+    id: "IDW18",
+    label: "IDW18 (240x240)",
+    canvasW: 240,
+    canvasH: 240,
+    anchorX: 120,
+    anchorY: 120,
+    previewW: 180,
+    previewH: 180,
+    previewCornerRadius: 84,
+    previewBorderColor: "rgba(123, 123, 123)",
+    previewBorderWidth: 2,
+    previewBorderRectWidth: 169,   // Custom border width (NEW)
+    previewBorderRectHeight: 169,  // Custom border height (NEW)
+    previewScale: 0.94,
+  },
+  IDB03: {
+    id: "IDB03",
+    label: "IDB03 (200x320)",
+    canvasW: 200,
+    canvasH: 320,
+    anchorX: 100,
+    anchorY: 160,
+    previewW: 154,
+    previewH: 240,
+    previewCornerRadius: 8,
+    previewBorderColor: "rgba(123, 123, 123)",
+    previewBorderWidth: 2,
+    previewBorderRectWidth: 142,   // Custom border width (NEW)
+    previewBorderRectHeight: 226,  // Custom border height (NEW)
+    previewScale: 0.95,
+  },
   IDW20: {
     id: "IDW20",
     label: "IDW20 (320x385)",
@@ -244,11 +259,11 @@ export const DEVICE_PROFILES: Record<DeviceId, DeviceProfile> = {
   },
 };
 
-export const DEVICE_IDS: DeviceId[] = ["IDW13", "IDW20"];
+export const DEVICE_IDS: DeviceId[] = ["IDW13", "IDW18", "IDW20", "IDB03"];
 export const DEFAULT_DEVICE: DeviceId = "IDW20";
 
 /** Resolves a (possibly unrecognized/legacy) deviceId string to a known profile, defaulting to IDW20. */
 export function getDeviceProfile(deviceId: string | undefined): DeviceProfile {
-  if (deviceId === "IDW13" || deviceId === "IDW20") return DEVICE_PROFILES[deviceId];
+  if (deviceId === "IDW13" || deviceId === "IDW18" || deviceId === "IDB03" || deviceId === "IDW20") return DEVICE_PROFILES[deviceId];
   return DEVICE_PROFILES[DEFAULT_DEVICE];
 }
