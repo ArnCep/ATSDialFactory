@@ -296,6 +296,7 @@ export async function addCustomWidget(
     font: folderName,
     fontnum: Object.keys(imageStrip).length,
   };
+  if (typeVal === "date") json.style = 1;
   if (typeVal === "distance") json.metricinch = 1;
   if (typeVal === "weather") json.style = 2;
   if (typeVal === "month" || typeVal === "year") json.style = 0;
