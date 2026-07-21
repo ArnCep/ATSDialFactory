@@ -74,12 +74,12 @@ export const SUPPORTED_CUSTOM = new Set([
   "date", "time", "hour", "hourhi", "hourlo", "min", "minhi", "minlo",
   "second", "week", "day", "month", "year",
   "calorie", "distance", "heartrate", "battery",
-  "step", "walk", "exercise", "apm", "weather", "icon",
+  "step", "walk", "exercise", "apm", "weather",
 ]);
 
 export const COMING_SOON = new Set([
   "redpoint", "anima", "multimeter", "gradient",
-  "shortcut", "sleep", "bluetooth",
+  "shortcut", "sleep", "bluetooth", "icon",
 ]);
 
 /** All "custom" sub-types offered in the Add Widget dialog. */
