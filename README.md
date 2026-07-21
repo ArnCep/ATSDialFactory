@@ -34,9 +34,9 @@ Additional Actions MCU-based IDO smartwatch models (e.g. IDSport03) may be suppo
 
 ## Known Issues
 
-The `preview.png` image generation is still being improved, so expect issues:
+The background corner matcher dialog is still being improved, so expect issues:
 
-* Preview image may not appear in the downloaded .zip file
+* Green background corners may differ in model resolution
 
 ## Packing Watch Faces
 ATSDialFactory does not support compiling watch faces into a binary format (.iwf). To pack a watch face into an .iwf file, you must install these files/packages first:
