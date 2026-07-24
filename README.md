@@ -32,17 +32,17 @@ Currently supported:
 
 Additional Actions MCU-based IDO smartwatch models (e.g. IDSport03) may be supported in future releases.
 
-## Switch to ATSDialFactory
-Unlike complex community tools, ATSDialFactory provides browser-based watch face editing experience.
+## Sample Watch Faces
+### 512w1
+<img width="174" height="196" alt="preview" src="https://github.com/user-attachments/assets/092f98cb-07cb-4e5a-929a-1b273e640ef6" />
 
-### Comparison to CadranEditor
-| CadranEditor   | ATSDialFactory
-| -----    | -------------- 
-| Linux-Only    | Cross-Platform |
-| Complex Framework Installations    | Browser-Based  |
-| No .zip export | .zip export option|
-| Replace assets in templates folder | File Picker |
-| IDW18 Only | Multiple Model Support |
+### 835w1
+<img width="154" height="240" alt="preview" src="https://github.com/user-attachments/assets/cc4dbab8-dbc3-43ec-9fd1-1ee895fbf0dd" />
+
+### 840w1
+<img width="272" height="324" alt="preview" src="https://github.com/user-attachments/assets/1a5419fc-f2f1-434c-8977-780c3c4625f0" />
+
+### More sample watch faces to be made...
 
 ## Known Issues
 
