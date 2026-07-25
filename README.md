@@ -44,6 +44,11 @@ Additional Actions MCU-based IDO smartwatch models (e.g. IDSport03) may be suppo
 
 ### More sample watch faces to be made...
 
+## Choosing the right watch face editor
+If you prefer more customization and no complex framework installations, read this image for more information.
+
+<img width="1280" height="720" alt="Untitled - July 25, 2026 at 12 57 31" src="https://github.com/user-attachments/assets/d3c7b125-dd26-405b-9ba1-be73174fdedc" />
+
 ## Known Issues
 
 The background corner matcher dialog is still being improved, so expect issues:
