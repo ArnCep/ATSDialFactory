@@ -74,12 +74,12 @@ export const SUPPORTED_CUSTOM = new Set([
   "date", "time", "hour", "hourhi", "hourlo", "min", "minhi", "minlo",
   "second", "week", "day", "month", "year",
   "calorie", "distance", "heartrate", "battery",
-  "step", "walk", "exercise", "apm", "weather",
+  "step", "walk", "exercise", "apm", "weather", "anima",
 ]);
 
 export const COMING_SOON = new Set([
-  "redpoint", "anima", "multimeter", "gradient",
-  "shortcut", "sleep", "bluetooth", "icon",
+  "redpoint", "icon", "multimeter", "gradient",
+  "shortcut", "sleep", "bluetooth",
 ]);
 
 /** All "custom" sub-types offered in the Add Widget dialog. */
@@ -190,6 +190,7 @@ export interface DeviceProfile {
   previewBorderRectWidth?: number;   // Width of the border rectangle (NEW)
   previewBorderRectHeight?: number;  // Height of the border rectangle (NEW)
   previewScale: number;
+  displayCornerRadius: number;
 }
 
 export const DEVICE_PROFILES: Record<DeviceId, DeviceProfile> = {
@@ -205,9 +206,10 @@ export const DEVICE_PROFILES: Record<DeviceId, DeviceProfile> = {
     previewCornerRadius: 31,
     previewBorderColor: "rgba(37, 37, 37)",
     previewBorderWidth: 2,
-    previewBorderRectWidth: 168,   // Custom border width (NEW)
-    previewBorderRectHeight: 194,  // Custom border height (NEW)
+    previewBorderRectWidth: 168,
+    previewBorderRectHeight: 194,
     previewScale: 1,
+    displayCornerRadius: 49,  // NEW
   },
   IDW18: {
     id: "IDW18",
@@ -221,9 +223,10 @@ export const DEVICE_PROFILES: Record<DeviceId, DeviceProfile> = {
     previewCornerRadius: 84,
     previewBorderColor: "rgba(123, 123, 123)",
     previewBorderWidth: 2,
-    previewBorderRectWidth: 169,   // Custom border width (NEW)
-    previewBorderRectHeight: 169,  // Custom border height (NEW)
+    previewBorderRectWidth: 169,
+    previewBorderRectHeight: 169,
     previewScale: 0.94,
+    displayCornerRadius: 150,  // NEW
   },
   IDB03: {
     id: "IDB03",
@@ -237,9 +240,10 @@ export const DEVICE_PROFILES: Record<DeviceId, DeviceProfile> = {
     previewCornerRadius: 8,
     previewBorderColor: "rgba(123, 123, 123)",
     previewBorderWidth: 2,
-    previewBorderRectWidth: 142,   // Custom border width (NEW)
-    previewBorderRectHeight: 226,  // Custom border height (NEW)
+    previewBorderRectWidth: 142,
+    previewBorderRectHeight: 226,
     previewScale: 0.95,
+    displayCornerRadius: 8,  // NEW
   },
   IDW20: {
     id: "IDW20",
@@ -253,9 +257,10 @@ export const DEVICE_PROFILES: Record<DeviceId, DeviceProfile> = {
     previewCornerRadius: 67,
     previewBorderColor: "rgb(128, 128, 128)",
     previewBorderWidth: 3,
-    previewBorderRectWidth: 268,   // Custom border width (NEW)
-    previewBorderRectHeight: 320,  // Custom border height (NEW)
+    previewBorderRectWidth: 268,
+    previewBorderRectHeight: 320,
     previewScale: 0.95,
+    displayCornerRadius: 75,  // NEW
   },
 };
 
