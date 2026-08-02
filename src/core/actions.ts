@@ -296,10 +296,11 @@ export async function addCustomWidget(
     font: folderName,
     fontnum: Object.keys(imageStrip).length,
   };
+  if (typeVal === "week") json.style = 0;
   if (typeVal === "date") json.style = 1;
   if (typeVal === "distance") json.metricinch = 1;
   if (typeVal === "weather") json.style = 2;
-  if (typeVal === "month" || typeVal === "year") json.style = 0;
+  if (typeVal === "month") json.style = 0;
 
   const entry: WidgetEntry = { widgetType: "custom", typeValue: typeVal, json, imageStrip, fontFolder: folderName };
 
