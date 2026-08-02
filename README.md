@@ -6,6 +6,9 @@ A browser-based watch face editor written in TypeScript for IDO smartwatches pow
 
 ATSDialFactory allows users to create, edit, preview, and export custom watch faces using the IDO watch face format.
 
+## Notice
+After looking further, the IDB03 actually uses the watch_15 widget, but not watch widget. Use the watch widget for IDB03 at your own risk.
+
 ## Features
 
 * Browser-based watch face editing
