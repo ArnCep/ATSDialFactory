@@ -35,17 +35,12 @@ Currently supported:
 
 Additional Actions MCU-based IDO smartwatch models (e.g. IDSport03) may be supported in future releases.
 
-## Sample Watch Faces
-### 512w1
-<img width="174" height="196" alt="preview" src="https://github.com/user-attachments/assets/092f98cb-07cb-4e5a-929a-1b273e640ef6" />
+## Watch faces made with ATSDialFactory
+### petsim1 (IDW13) (Pet Simulator 99 Watch Face)
+<img width="174" height="196" alt="preview_idw13" src="https://github.com/user-attachments/assets/69599058-4ecf-4055-ad2d-4675787d4741" />
 
-### 835w1
-<img width="154" height="240" alt="preview" src="https://github.com/user-attachments/assets/cc4dbab8-dbc3-43ec-9fd1-1ee895fbf0dd" />
-
-### 840w1
-<img width="272" height="324" alt="preview" src="https://github.com/user-attachments/assets/1a5419fc-f2f1-434c-8977-780c3c4625f0" />
-
-### More sample watch faces to be made...
+### petsim1 (IDB03) (Pet Simulator 99 Watch Face)
+<img width="154" height="240" alt="preview_idb03" src="https://github.com/user-attachments/assets/fbf35557-d094-43b8-b052-94ef2c2b1dcd" />
 
 ## Known Issues
 
